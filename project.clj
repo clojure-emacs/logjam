@@ -34,5 +34,6 @@
                                                                   org.clojure/clojurescript]]]}
              :eastwood {:plugins         [[jonase/eastwood "1.4.0"]]
                         :eastwood {:add-linters [:performance :boxed-math]}}
-             :clj-kondo {:dependencies [[clj-kondo "2023.05.26"]]}
+             :clj-kondo {:dependencies [[clj-kondo "2023.05.26"]
+                                        [com.fasterxml.jackson.core/jackson-core "2.14.2"]]}
              :deploy {:source-paths [".circleci/deploy"]}})
