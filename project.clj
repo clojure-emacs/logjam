@@ -15,9 +15,9 @@
                                     :username :env/clojars_username
                                     :password :env/clojars_password
                                     :sign-releases false}]]
-  :profiles {:provided {:dependencies [[org.clojure/clojure "1.11.1"]]}
-
-             :1.8 {:dependencies [[org.clojure/clojure "1.8.0"]]}
+  :profiles {:provided {:dependencies [;; 1.3.7 and 1.4.7 are working, but we need 1.3.7 for JDK8
+                                       [ch.qos.logback/logback-classic "1.3.7"]
+                                       [org.clojure/clojure "1.11.1"]]}
 
              :1.9 {:dependencies [[org.clojure/clojure "1.9.0"]]}
 
@@ -30,10 +30,15 @@
                       :dependencies [[org.clojure/clojure "1.12.0-master-SNAPSHOT"]
                                      [org.clojure/clojure "1.12.0-master-SNAPSHOT" :classifier "sources"]]}
 
+             :test {:jvm-opts ["-Djava.util.logging.config.file=test/resources/logging.properties"]
+                    :resource-paths ["test/resources"]
+                    :dependencies [[org.clojure/test.check "1.1.1" :exclusions [org.clojure/clojure]]]}
+
              :cljfmt {:plugins [[lein-cljfmt "0.9.2" :exclusions [org.clojure/clojure
                                                                   org.clojure/clojurescript]]]}
              :eastwood {:plugins         [[jonase/eastwood "1.4.0"]]
-                        :eastwood {:add-linters [:performance :boxed-math]}}
+                        :eastwood {:add-linters [:performance :boxed-math]
+                                   :config-files ["eastwood.clj"]}}
              :clj-kondo {:dependencies [[clj-kondo "2023.05.26"]
                                         [com.fasterxml.jackson.core/jackson-core "2.14.2"]]}
              :deploy {:source-paths [".circleci/deploy"]}})
