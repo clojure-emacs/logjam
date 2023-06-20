@@ -15,7 +15,11 @@
                                     :username :env/clojars_username
                                     :password :env/clojars_password
                                     :sign-releases false}]]
-  :profiles {:provided {:dependencies [[org.clojure/clojure "1.11.1"]]}
+  :profiles {:provided {:dependencies [[org.apache.logging.log4j/log4j-api "2.20.0"]
+                                       [org.apache.logging.log4j/log4j-core "2.20.0"]
+                                       ;; 1.3.7 and 1.4.7 are working, but we need 1.3.7 for JDK8
+                                       [ch.qos.logback/logback-classic "1.3.7"]
+                                       [org.clojure/clojure "1.11.1"]]}
 
              :1.8 {:dependencies [[org.clojure/clojure "1.8.0"]]}
 
@@ -29,6 +33,10 @@
                                       "https://oss.sonatype.org/content/repositories/snapshots"]]
                       :dependencies [[org.clojure/clojure "1.12.0-master-SNAPSHOT"]
                                      [org.clojure/clojure "1.12.0-master-SNAPSHOT" :classifier "sources"]]}
+
+             :test {:jvm-opts ["-Djava.util.logging.config.file=test/resources/logging.properties"]
+                    :resource-paths ["test/resources"]
+                    :dependencies [[org.clojure/test.check "1.1.1"]]}
 
              :cljfmt {:plugins [[lein-cljfmt "0.9.2" :exclusions [org.clojure/clojure
                                                                   org.clojure/clojurescript]]]}
