@@ -26,3 +26,4 @@ install.cmd
 /.lein-env
 .inline-deps
 .clj-kondo/.cache/
+/.eastwood
