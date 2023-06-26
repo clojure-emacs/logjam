@@ -17,6 +17,10 @@ Mode](https://docs.cider.mx/cider/debugging/logging.html), but can also be used 
 
 ## Overview
 
+### Status
+
+This library is still experimental and APIs are subject to change.
+
 ### Log Framework
 
 Logjam supports log frameworks that allow reconfiguration at run
