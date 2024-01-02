@@ -61,7 +61,7 @@ the `+*cider-log*+` buffer. Additionally a log consumer will be
 attached to the appender to receive log events matching the search
 criteria after the search command has been issued. The log appender
 will be removed automatically once a new search has been submitted or
-when the `+*cider-log*+` buffer gets killed.
+when the `*cider-log*` buffer gets killed.
 
 ### Log Filters
 
@@ -109,6 +109,10 @@ like:
 
 ## Development
 
+#### Makefile
+
+The Makefile offers a variety of tasks: `test kondo eastwood cljfmt lint clean repl`.
+
 #### Deployment
 
 Here's how to deploy to Clojars:
@@ -128,6 +132,6 @@ on his private development tooling.
 
 ## License
 
-Copyright © 2023 CIDER Contributors
+Copyright © 2023-2024 CIDER Contributors
 
 Distributed under the Eclipse Public License, the same as Clojure.
