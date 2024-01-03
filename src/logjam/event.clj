@@ -30,7 +30,9 @@
   (let [exceptions (set exceptions)
         level->weight (into {} (map (juxt :name :weight) levels))
         level-weight (when (or (string? level) (keyword? level))
-                       (some-> level name str/upper-case keyword level->weight))
+                       (or (some-> level name str/upper-case keyword level->weight)
+                           ;; Timbre doesn't use upper-case convention:
+                           (get level->weight level)))
         loggers (set loggers)
         threads (set threads)
         pattern (cond

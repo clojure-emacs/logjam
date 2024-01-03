@@ -7,7 +7,8 @@
 
 (def ^:dynamic *frameworks*
   ['logjam.framework.logback/framework
-   'logjam.framework.jul/framework])
+   'logjam.framework.jul/framework
+   'logjam.framework.timbre/framework])
 
 (defn- ex-appender-not-found
   "Return the appender not found exception info."

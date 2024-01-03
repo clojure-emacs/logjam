@@ -65,7 +65,7 @@
       exception (assoc :exception exception))))
 
 (defn- add-appender
-  "Attach the Logback appender."
+  "Attach the Java Util Logging appender."
   [framework appender]
   (let [instance (proxy [StreamHandler] []
                    (publish [^LogRecord record]
@@ -77,7 +77,7 @@
     framework))
 
 (defn- remove-appender
-  "Remove `appender` from the Logback `framework`."
+  "Remove `appender` from the Java Util Logging `framework`."
   [framework appender]
   (let [^String logger-name (or (:logger appender) (:root-logger framework))
         logger (Logger/getLogger logger-name)]

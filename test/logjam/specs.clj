@@ -1,9 +1,12 @@
 (ns logjam.specs
-  (:require [clojure.spec.alpha :as s]
-            [logjam.appender :as appender]
-            [logjam.framework :as framework]
-            [logjam.repl :as repl])
-  (:import [java.util.regex Pattern]))
+  (:require
+   [clojure.spec.alpha :as s]
+   [clojure.string :as string]
+   [logjam.appender :as appender]
+   [logjam.framework :as framework]
+   [logjam.repl :as repl])
+  (:import
+   (java.util.regex Pattern)))
 
 (s/def :logjam.level/category simple-keyword?)
 (s/def :logjam.level/name simple-keyword?)
@@ -41,8 +44,8 @@
                    :logjam.filter/start-time
                    :logjam.filter/threads]))
 
-(s/def :logjam.pagination/limit nat-int?)
-(s/def :logjam.pagination/offset nat-int?)
+(s/def :logjam.pagination/limit (s/and nat-int? #(< ^long % 100)))
+(s/def :logjam.pagination/offset (s/and nat-int? #(< ^long % 100)))
 
 (s/def :logjam.event/search
   (s/keys :opt-un [:logjam.pagination/limit
@@ -101,7 +104,7 @@
 (s/def :logjam.event/level simple-keyword?)
 (s/def :logjam.event/logger string?)
 (s/def :logjam.event/mdc (s/map-of string? string?))
-(s/def :logjam.event/message string?)
+(s/def :logjam.event/message (s/and string? (complement string/blank?)))
 (s/def :logjam.event/thread string?)
 (s/def :logjam.event/timestamp pos-int?)
 

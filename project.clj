@@ -17,6 +17,7 @@
                                     :sign-releases false}]]
   :profiles {:provided {:dependencies [;; 1.3.7 and 1.4.7 are working, but we need 1.3.7 for JDK8
                                        [ch.qos.logback/logback-classic "1.3.7"]
+                                       [com.taoensso/timbre "6.3.1" :exclusions [org.clojure/clojure]]
                                        [org.clojure/clojure "1.11.1"]]}
 
              :dev {:plugins [[cider/cider-nrepl "0.44.0"]
