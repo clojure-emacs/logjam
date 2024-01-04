@@ -2,7 +2,6 @@
   (:require
    [clojure.spec.alpha :as s]
    [clojure.string :as string]
-   [clojure.test.check.generators :as gen]
    [logjam.appender :as appender]
    [logjam.framework :as framework]
    [logjam.repl :as repl])

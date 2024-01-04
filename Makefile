@@ -53,8 +53,11 @@ cljfmt-fix:
 eastwood:
 	lein with-profile -user,-dev,+$(VERSION),+test,+deploy,+eastwood eastwood
 
-kondo:
-	lein with-profile -dev,-dev,+$(VERSION),+test,+clj-kondo run -m clj-kondo.main --lint src test .circleci/deploy
+.make_kondo_prep: project.clj .clj-kondo/config.edn
+	lein with-profile -dev,+$(VERSION),+test,+clj-kondo,+deploy clj-kondo --copy-configs --dependencies --parallel --lint '$$classpath' > $@
+
+kondo: .make_kondo_prep clean
+	lein with-profile -dev,+$(VERSION),+test,+clj-kondo,+deploy clj-kondo
 
 repl: lein-repl
 
