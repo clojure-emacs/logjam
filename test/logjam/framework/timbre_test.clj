@@ -20,7 +20,7 @@
                             (framework/remove-appender *framework* appender-map))))))
 
 (defn last-event []
-  (last (framework/events *framework* appender-map)))
+  (first (framework/events *framework* appender-map)))
 
 (deftest timbre-test
   (testing "Basic case"
@@ -33,4 +33,42 @@
                  :logger "logjam.framework.timbre-test:27:5",
                  :timestamp nat-int?,
                  :message "sample"}
-                (last-event)))))
+                (last-event))))
+
+  (testing "The thread name is accurately captured"
+    (let [thread-name (str "a" (java.util.UUID/randomUUID))]
+      (-> #(timbre/info "sample")
+          Thread.
+          (doto (.setName thread-name))
+          (doto .start)
+          .join)
+      (is (match? {:thread thread-name}
+                  (last-event)))))
+
+  (testing "Exceptions' messages can serve as the log message"
+    (timbre/info (ex-info "the error message" {}))
+    (is (match? {:message "the error message"}
+                (last-event))))
+
+  (testing "Exceptions are captured"
+    (let [ex (ex-info "the error message" {})]
+      (timbre/info ex)
+      (is (= ex
+             (:exception (last-event))))))
+
+  (testing "Timbre context is recorded as `:mdc`"
+    (timbre/with-context {:a 1 :b 2}
+      (timbre/info "foo"))
+    (is (match? {:mdc {:a 1 :b 2}}
+                (last-event))))
+
+  (testing "Formatted logging"
+    (timbre/infof "foo %s" 42)
+
+    (is (match? {:message "foo 42"}
+                (last-event))
+        "The captured `:message` is the application of the arguments over the template")
+
+    (is (match? {:arguments [42]}
+                (last-event))
+        "The arguments are accurately captured")))

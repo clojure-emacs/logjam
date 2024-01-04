@@ -44,6 +44,6 @@
              :eastwood {:plugins         [[jonase/eastwood "1.4.2"]]
                         :eastwood {:add-linters [:performance :boxed-math]
                                    :config-files ["eastwood.clj"]}}
-             :clj-kondo {:plugins [[com.github.clj-kondo/lein-clj-kondo "2023.10.20"]]
-                         :dependencies [[com.fasterxml.jackson.core/jackson-core "2.14.2"]]}
+             :clj-kondo {:plugins [[com.github.clj-kondo/lein-clj-kondo "2023.10.20" :exclusions [org.clojure/clojure]]
+                                   [com.fasterxml.jackson.core/jackson-core "2.14.2"]]}
              :deploy {:source-paths [".circleci/deploy"]}})
