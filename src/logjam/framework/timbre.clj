@@ -40,10 +40,10 @@
            :mdc (or context {})}
     ?err (assoc :exception ?err)))
 
-(defn add-thread-info [data]
+(defn- add-thread-info [data]
   (assoc data :thread (.getName (Thread/currentThread))))
 
-(defn add-thread-info-var? [x]
+(defn- add-thread-info-var? [x]
   (and (var? x)
        (= {:name 'add-thread-info,
            :ns "logjam.framework.timbre"}
