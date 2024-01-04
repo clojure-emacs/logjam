@@ -2,6 +2,7 @@
   (:require
    [clojure.spec.alpha :as s]
    [clojure.string :as string]
+   [clojure.test.check.generators :as gen]
    [logjam.appender :as appender]
    [logjam.framework :as framework]
    [logjam.repl :as repl])
@@ -103,7 +104,9 @@
 (s/def :logjam.event/id uuid?)
 (s/def :logjam.event/level simple-keyword?)
 (s/def :logjam.event/logger string?)
-(s/def :logjam.event/mdc (s/map-of string? string?))
+(s/def :logjam.event/mdc
+  (s/with-gen map? ;; relaxed spec for Timbre
+    #(s/gen (s/map-of string? string?)))) ;; strict gen for Logback
 (s/def :logjam.event/message (s/and string? (complement string/blank?)))
 (s/def :logjam.event/thread string?)
 (s/def :logjam.event/timestamp pos-int?)
