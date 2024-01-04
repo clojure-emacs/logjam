@@ -68,7 +68,7 @@ lint: kondo cljfmt eastwood
 deploy: check-env
 	lein with-profile -user,-dev,+$(VERSION) deploy clojars
 
-# Usage: PROJECT_VERSION=0.1.1 make install
+# Usage: PROJECT_VERSION=0.2.0 make install
 # PROJECT_VERSION is needed because it's not computed dynamically.
 install: check-install-env
 	lein with-profile -user,-dev,+$(VERSION) install

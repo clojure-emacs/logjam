@@ -124,7 +124,7 @@ jobs:
             - v2-dependencies-{{ checksum "project.clj" }}
             # fallback to using the latest cache if no exact match is found
             - v2-dependencies-
-      - run: lein with-profile -user,+test deps
+      - run: lein with-profile -user,-dev,+deploy deps
       - save_cache:
           paths:
             - ~/.m2
@@ -132,7 +132,7 @@ jobs:
       - run:
          name: Deploy
          command: |
-           lein with-profile -user,+deploy run -m deploy-release make deploy
+           lein with-profile -user,-dev,+deploy run -m deploy-release make deploy
 
   test_code:
     description: |
