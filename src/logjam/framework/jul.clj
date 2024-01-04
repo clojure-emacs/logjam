@@ -1,12 +1,12 @@
 (ns logjam.framework.jul
-  "Log event capturing implementation for Java Util Logging."
+  "Log event capturing implementation for `java.util.logging` (Java Logging API, JUL)."
   {:author "r0man"}
   (:require [clojure.set :as set]
             [logjam.appender :as appender])
   (:import (java.util.logging Level Logger LogRecord StreamHandler)))
 
 (def ^:private log-levels
-  "The Java Util Logging level descriptors."
+  "The `java.util.logging` (Java Logging API, JUL) level descriptors."
   (->> [{:name :FINEST
          :category :trace
          :object Level/FINEST}
@@ -65,7 +65,7 @@
       exception (assoc :exception exception))))
 
 (defn- add-appender
-  "Attach the Logback appender."
+  "Attach the `java.util.logging` (Java Logging API, JUL) appender."
   [framework appender]
   (let [instance (proxy [StreamHandler] []
                    (publish [^LogRecord record]
@@ -77,7 +77,7 @@
     framework))
 
 (defn- remove-appender
-  "Remove `appender` from the Logback `framework`."
+  "Remove `appender` from the `java.util.logging` (Java Logging API, JUL) `framework`."
   [framework appender]
   (let [^String logger-name (or (:logger appender) (:root-logger framework))
         logger (Logger/getLogger logger-name)]
@@ -89,7 +89,7 @@
     (.log (Logger/getLogger logger-name) (event->record event))))
 
 (def framework
-  "The Java Util Logging framework."
+  "The `java.util.logging` (Java Logging API, JUL) framework."
   {:add-appender-fn #'add-appender
    :id "jul"
    :javadoc-url "https://docs.oracle.com/en/java/javase/19/docs/api/java.logging/java/util/logging/package-summary.html"

@@ -53,8 +53,11 @@ cljfmt-fix:
 eastwood:
 	lein with-profile -user,-dev,+$(VERSION),+test,+deploy,+eastwood eastwood
 
-kondo:
-	lein with-profile -dev,-dev,+$(VERSION),+test,+clj-kondo run -m clj-kondo.main --lint src test .circleci/deploy
+.make_kondo_prep: project.clj .clj-kondo/config.edn
+	lein with-profile -dev,+$(VERSION),+test,+clj-kondo,+deploy clj-kondo --copy-configs --dependencies --parallel --lint '$$classpath' > $@
+
+kondo: .make_kondo_prep clean
+	lein with-profile -dev,+$(VERSION),+test,+clj-kondo,+deploy clj-kondo
 
 repl: lein-repl
 
@@ -65,7 +68,7 @@ lint: kondo cljfmt eastwood
 deploy: check-env
 	lein with-profile -user,-dev,+$(VERSION) deploy clojars
 
-# Usage: PROJECT_VERSION=3.2.1 make install
+# Usage: PROJECT_VERSION=0.1.1 make install
 # PROJECT_VERSION is needed because it's not computed dynamically.
 install: check-install-env
 	lein with-profile -user,-dev,+$(VERSION) install
