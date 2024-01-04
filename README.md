@@ -29,7 +29,7 @@ appenders to loggers, in order to capture events.
 
 At the moment the following log frameworks are supported:
 
-- [Java Util Logging](https://docs.oracle.com/en/java/javase/19/core/java-logging-overview.html)
+- [`java.util.logging` (Java Logging API, JUL)](https://docs.oracle.com/en/java/javase/19/core/java-logging-overview.html)
 - [Logback](https://logback.qos.ch)
 - [Timbre](https://github.com/taoensso/timbre)
 
