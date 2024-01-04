@@ -1,5 +1,6 @@
 (ns logjam.framework.timbre
   "Log event capturing implementation for Timbre."
+  {:added "0.2.0"}
   (:require
    [logjam.appender :as appender]
    [taoensso.timbre :as timbre])
