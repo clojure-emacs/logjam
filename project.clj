@@ -36,7 +36,8 @@
 
              :test {:jvm-opts ["-Djava.util.logging.config.file=test/resources/logging.properties"]
                     :resource-paths ["test/resources"]
-                    :dependencies [[org.clojure/test.check "1.1.1" :exclusions [org.clojure/clojure]]]}
+                    :dependencies [[nubank/matcher-combinators "3.8.8"]
+                                   [org.clojure/test.check "1.1.1" :exclusions [org.clojure/clojure]]]}
 
              :cljfmt {:plugins [[lein-cljfmt "0.9.2" :exclusions [org.clojure/clojure
                                                                   org.clojure/clojurescript]]]}

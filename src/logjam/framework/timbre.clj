@@ -14,11 +14,23 @@
                              :object %2}
                             :weight %1))))
 
-(defn- extract-event-data [{:keys [vargs level appender-id msg_ ^Date instant context ^Throwable ?err thread]}]
+(defn- extract-event-data [{:keys [vargs level msg_ ^Date instant context ^Throwable ?err thread ?file ^String ?ns-str ?line ?column appender-id]}]
   (cond-> {:arguments vargs ;; `vargs` are the arguments passed to a errorf, infof, etc call
            :id (java.util.UUID/randomUUID)
            :level level
-           :logger appender-id
+           :logger (or (when (not-empty ?ns-str)
+                         (let [sb (StringBuilder. ?ns-str)]
+                           (when ?line
+                             (.append sb \:)
+                             (.append sb (int ?line)))
+                           (when ?column
+                             (.append sb \:)
+                             (.append sb (int ?column)))
+                           (.toString sb)))
+
+                       (not-empty ?file)
+
+                       appender-id)
            :message (or (not-empty @msg_)
                         (some-> ?err .getMessage))
            :thread (or thread

@@ -45,9 +45,6 @@
                                 :logger (:root-logger framework))
               format? (seq (:arguments base-event))
               event (cond-> base-event
-                      timbre?
-                      (assoc :logger (:id appender))
-
                       (and timbre? format?)
                       (assoc :message (apply str "foo" (repeat (count (:arguments base-event))
                                                                " %s"))))
@@ -61,7 +58,8 @@
                 (is (= (:arguments event) (:arguments captured-event))))
               (is (uuid? (:id captured-event)))
               (is (= (:level event) (:level captured-event)))
-              (is (= (:logger event) (:logger captured-event)))
+              (when-not timbre? ;; timbre uses ns strings instead of logger ids
+                (is (= (:logger event) (:logger captured-event))))
               (is (= (case (keyword (:id framework))
                        :jul {} ;; not supported
                        :log4j2 (:mdc event)
