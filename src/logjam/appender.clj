@@ -4,8 +4,9 @@
   (:require [logjam.event :as event]))
 
 (def ^:private default-size
-  "The default number of events captured by an appender."
-  100000)
+  "The default maximum number of events that can be captured by a given appender."
+  (or (some-> (System/getProperty "logjam.appender.default-event-size") Long/parseLong)
+      100000))
 
 (def ^:private default-threshold
   "The default threshold in percentage after which log events are cleaned up.
