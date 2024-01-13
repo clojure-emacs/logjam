@@ -31,6 +31,8 @@
 
 (s/def :logjam.filter/loggers-allowlist :logjam.filter/loggers)
 
+(s/def :logjam.filter/loggers-blocklist :logjam.filter/loggers)
+
 (s/def :logjam.filter/pattern string?)
 (s/def :logjam.filter/start-time pos-int?)
 
@@ -43,6 +45,7 @@
                    :logjam.filter/level
                    :logjam.filter/loggers
                    :logjam.filter/loggers-allowlist
+                   :logjam.filter/loggers-blocklist
                    :logjam.filter/pattern
                    :logjam.filter/start-time
                    :logjam.filter/threads]))
@@ -105,7 +108,8 @@
 (s/def :logjam.event/arguments (s/coll-of :logjam.event/argument :kind vector?))
 (s/def :logjam.event/id uuid?)
 (s/def :logjam.event/level simple-keyword?)
-(s/def :logjam.event/logger string?)
+(s/def :logjam.event/logger (s/with-gen string?
+                              #(s/gen (s/and string? (complement string/blank?)))))
 (s/def :logjam.event/mdc
   (s/with-gen map? ;; relaxed spec for Timbre
     #(s/gen (s/map-of string? string?)))) ;; strict gen for Logback

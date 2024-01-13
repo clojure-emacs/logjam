@@ -58,7 +58,7 @@ certain events.
 Log events can be searched, streamed to a client or viewed in CIDER's
 Inspector and Stacktrace Mode. When searching log events the user can
 specify a set of filters. Events that match the filters are shown in
-the `+*cider-log*+` buffer. Additionally a log consumer will be
+the `*cider-log*` buffer. Additionally a log consumer will be
 attached to the appender to receive log events matching the search
 criteria after the search command has been issued. The log appender
 will be removed automatically once a new search has been submitted or
@@ -70,6 +70,15 @@ Filters for log events can be attached to log appenders and
 consumers. They also take effect when searching events or streaming
 them to clients. If multiple filters are chosen they are combined
 using logical AND condition. The following filters are available:
+
+* `exceptions`
+* `level`
+* `pattern`
+* `start-time`
+* `end-time`
+* `threads`
+* `loggers-allowlist`
+* `loggers-blocklist`
 
 ## Usage
 

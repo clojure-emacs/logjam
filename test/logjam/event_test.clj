@@ -59,8 +59,9 @@
      (let [opts {:filters {:loggers loggers}}
            events-found (event/search levels opts events)]
        (set/subset? (set (map :logger events-found))
-                    (set (map :logger events))))))
+                    (set (map :logger events)))))))
 
+(defspec test-search-loggers-allowlist
   (testing "`:loggers-allowlist` (newer key)"
     (prop/for-all
      [{:keys [levels]} (gen/elements frameworks)
@@ -70,6 +71,18 @@
            events-found (event/search levels opts events)]
        (set/subset? (set (map :logger events-found))
                     (set (map :logger events)))))))
+
+(defspec test-search-loggers-blocklist
+  (testing "`:loggers-blocklist`"
+    (prop/for-all
+     [[events framework] (gen/let [framework (gen/elements frameworks)
+                                   events (gen/vector (test/event-gen framework) 10)]
+                           [events framework])]
+     (let [blocklist (->> events (take 5) (map :logger))
+           opts {:filters {:loggers-blocklist blocklist}}
+           events-found (event/search (:levels framework) opts events)]
+       (not-any? (set blocklist)
+                 (map :logger events-found))))))
 
 (defspec test-search-limit
   (prop/for-all

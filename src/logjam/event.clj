@@ -26,7 +26,7 @@
 
 (defn search-filter
   "Return a predicate function that computes if a given event matches the search criteria."
-  [levels {:keys [end-time exceptions level pattern start-time threads loggers loggers-allowlist]}]
+  [levels {:keys [end-time exceptions level pattern start-time threads loggers loggers-allowlist loggers-blocklist]}]
   (let [exceptions (set exceptions)
         level->weight (into {} (map (juxt :name :weight) levels))
         level-weight (when (or (string? level) (keyword? level))
@@ -37,22 +37,25 @@
                  (set loggers) ;; legacy name
                  (set loggers-allowlist) ;; newer name (same semantics)
                  )
+        loggers-blocklist (set loggers-blocklist)
         threads (set threads)
         pattern (cond
                   (string? pattern)
                   (try (re-pattern pattern) (catch Exception _))
                   (instance? Pattern pattern)
                   pattern)]
-    (if (or (seq exceptions) (seq loggers) (seq threads) level-weight pattern start-time end-time)
+    (if (or (seq exceptions) (seq loggers) (seq loggers-blocklist) (seq threads) level-weight pattern start-time end-time)
       (fn [event]
-        (and (or (empty? exceptions)
-                 (contains? exceptions (some-> event :exception exception-name)))
-             (or (nil? level-weight)
-                 (>= ^long (level->weight (:level event)) ^long level-weight))
+        (and (or (empty? loggers-blocklist)
+                 (not (contains? loggers-blocklist (:logger event))))
              (or (empty? loggers)
                  (contains? loggers (:logger event)))
              (or (empty? threads)
                  (contains? threads (:thread event)))
+             (or (empty? exceptions)
+                 (contains? exceptions (some-> event :exception exception-name)))
+             (or (nil? level-weight)
+                 (>= ^long (level->weight (:level event)) ^long level-weight))
              (or (not pattern)
                  (some->> event :message (re-matches pattern)))
              (or (not (nat-int? start-time))
