@@ -26,14 +26,17 @@
 
 (defn search-filter
   "Return a predicate function that computes if a given event matches the search criteria."
-  [levels {:keys [end-time exceptions level loggers pattern start-time threads]}]
+  [levels {:keys [end-time exceptions level pattern start-time threads loggers loggers-allowlist]}]
   (let [exceptions (set exceptions)
         level->weight (into {} (map (juxt :name :weight) levels))
         level-weight (when (or (string? level) (keyword? level))
                        (or (some-> level name str/upper-case keyword level->weight)
                            ;; Timbre doesn't use upper-case convention:
                            (get level->weight level)))
-        loggers (set loggers)
+        loggers (into ;; The legacy `loggers` and the newer `loggers-allowlist` are combined, so as to not have breaking changes.
+                 (set loggers) ;; legacy name
+                 (set loggers-allowlist) ;; newer name (same semantics)
+                 )
         threads (set threads)
         pattern (cond
                   (string? pattern)

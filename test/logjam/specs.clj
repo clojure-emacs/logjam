@@ -29,6 +29,8 @@
 (s/def :logjam.filter/loggers
   (s/coll-of string? :kind set?))
 
+(s/def :logjam.filter/loggers-allowlist :logjam.filter/loggers)
+
 (s/def :logjam.filter/pattern string?)
 (s/def :logjam.filter/start-time pos-int?)
 
@@ -40,6 +42,7 @@
                    :logjam.filter/exceptions
                    :logjam.filter/level
                    :logjam.filter/loggers
+                   :logjam.filter/loggers-allowlist
                    :logjam.filter/pattern
                    :logjam.filter/start-time
                    :logjam.filter/threads]))
