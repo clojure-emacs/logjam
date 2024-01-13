@@ -108,6 +108,14 @@ like:
 (repl/shutdown)
 ```
 
+## Configuration options
+
+The following options can be set as Java system properties:
+
+* `logjam.appender.default-event-size`
+  * The default maximum number of events that can be captured by a given appender.
+  * Default: 100000
+
 ## Development
 
 #### Makefile

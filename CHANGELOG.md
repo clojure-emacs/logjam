@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+* Introduce `logjam.appender.default-event-size` configuration option.
+
 ## 0.2.0 (2024-01-04)
 
 * [#8](https://github.com/clojure-emacs/logjam/issues/8): Introduce Timbre compatibility.
