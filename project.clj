@@ -20,7 +20,7 @@
                                        [com.taoensso/timbre "6.3.1" :exclusions [org.clojure/clojure]]
                                        [org.clojure/clojure "1.11.1"]]}
 
-             :dev {:plugins [[cider/cider-nrepl "0.44.0"]
+             :dev {:plugins [[cider/cider-nrepl "0.45.0"]
                              [refactor-nrepl "3.9.0"]]}
 
              :1.9 {:dependencies [[org.clojure/clojure "1.9.0"]]}
