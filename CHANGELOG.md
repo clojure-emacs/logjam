@@ -2,12 +2,10 @@
 
 ## master (unreleased)
 
+* [#16](https://github.com/clojure-emacs/logjam/issues/16): handle `java.net.SocketException`s that can be thrown for disconnected clients.
 * Introduce `logjam.appender.default-event-size` configuration option.
-
-* Event filters: rename `:loggers` to `:loggers-allowlist`
 * [#13](https://github.com/clojure-emacs/logjam/issues/13): Event filters: introduce `:loggers-blocklist`.
-* Event filters: rename `:loggers` to `:loggers-allowlist`.
- * `:loggers` will remain supported.
+  * `:loggers` will remain supported.
 
 ## 0.2.0 (2024-01-04)
 

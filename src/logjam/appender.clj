@@ -38,9 +38,13 @@
 
 (defn- notify-consumers
   [{:keys [consumers] :as appender} event]
-  (doseq [{:keys [callback filter-fn] :as consumer} (vals consumers)
+  (doseq [[consumer-id {:keys [callback filter-fn] :as consumer}] (some-> consumers deref)
           :when (filter-fn event)]
-    (callback consumer event))
+    (try
+      (callback consumer event)
+      (catch java.net.SocketException e ;; Issue #16 - disregard consumers from disconnected clients, and opportunistically remove them.
+        (.printStackTrace e)
+        (swap! consumers dissoc consumer-id))))
   appender)
 
 (defn- enqueue-event
@@ -56,11 +60,15 @@
 (defn add-consumer
   "Add the `consumer` to the `appender`."
   [appender {:keys [id filters] :as consumer}]
-  (assert (not (get-in appender [:consumers id]))
-          (format "Consumer %s already registered" id))
-  (assoc-in appender [:consumers id]
-            (-> (select-keys consumer [:callback :filters :id])
-                (assoc :filter-fn (event/search-filter (:levels appender) filters)))))
+  (when-let [consumers (some-> appender (get :consumers) deref)]
+    (assert (not (get consumers id))
+            (format "Consumer %s already registered" id)))
+  (swap! (:consumers appender)
+         assoc
+         id
+         (-> (select-keys consumer [:callback :filters :id])
+             (assoc :filter-fn (event/search-filter (:levels appender) filters))))
+  appender)
 
 (defn add-event
   "Add the `event` to the `appender`."
@@ -80,7 +88,7 @@
 (defn consumers
   "Return the consumers of the `appender`."
   [appender]
-  (vals (:consumers appender)))
+  (some-> appender :consumers deref vals))
 
 (defn consumer-by-id
   "Find the consumer of `appender` by `id`."
@@ -100,7 +108,7 @@
 (defn make-appender
   "Make a hash map appender."
   [{:keys [id filters levels logger size threshold]}]
-  (cond-> {:consumers {}
+  (cond-> {:consumers (atom {})
            :event-index {}
            :events nil
            :filters (or filters {})
@@ -116,7 +124,8 @@
 (defn remove-consumer
   "Remove the `consumer` from the `appender`."
   [appender consumer]
-  (update appender :consumers dissoc (:id consumer)))
+  (some-> appender :consumers (swap! dissoc (:id consumer)))
+  appender)
 
 (defn update-appender
   "Update the log `appender`."
@@ -132,10 +141,14 @@
 (defn update-consumer
   "Update the `consumer` of the `appender`."
   [appender {:keys [id filters] :as consumer}]
-  (update-in appender [:consumers id]
-             (fn [existing-consumer]
-               (assert (:id existing-consumer)
-                       (format "Consumer %s not registered" id))
-               (-> existing-consumer
-                   (merge (select-keys consumer [:filters]))
-                   (assoc :filter-fn (event/search-filter (:levels appender) filters))))))
+  (some-> appender
+          :consumers
+          (swap! update
+                 id
+                 (fn [existing-consumer]
+                   (assert (:id existing-consumer)
+                           (format "Consumer %s not registered" id))
+                   (-> existing-consumer
+                       (merge (select-keys consumer [:filters]))
+                       (assoc :filter-fn (event/search-filter (:levels appender) filters))))))
+  appender)
