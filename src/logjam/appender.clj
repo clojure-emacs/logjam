@@ -37,12 +37,16 @@
   (or (nil? filter-fn) (filter-fn event)))
 
 (defn- notify-consumers
+  "Calls the `:callback` present in each consumer.
+
+  If a SocketException is found, remove the consumer,
+  as it represents a disconnected nREPL client."
   [{:keys [consumers] :as appender} event]
   (doseq [[consumer-id {:keys [callback filter-fn] :as consumer}] (some-> consumers deref)
           :when (filter-fn event)]
     (try
       (callback consumer event)
-      (catch java.net.SocketException e ;; Issue #16 - disregard consumers from disconnected clients, and opportunistically remove them.
+      (catch java.net.SocketException e ;; Issue #16
         (.printStackTrace e)
         (swap! consumers dissoc consumer-id))))
   appender)
