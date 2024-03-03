@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 0.3.0 (2024-03-03)
+
 * [#16](https://github.com/clojure-emacs/logjam/issues/16): handle `java.net.SocketException`s that can be thrown for disconnected clients.
 * Introduce `logjam.appender.default-event-size` configuration option.
 * [#13](https://github.com/clojure-emacs/logjam/issues/13): Event filters: introduce `:loggers-blocklist`.
