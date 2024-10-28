@@ -17,10 +17,10 @@
                                     :sign-releases false}]]
   :profiles {:provided {:dependencies [;; 1.3.7 and 1.4.7 are working, but we need 1.3.7 for JDK8
                                        [ch.qos.logback/logback-classic "1.3.7"]
-                                       [com.taoensso/timbre "6.3.1" :exclusions [org.clojure/clojure]]
+                                       [com.taoensso/timbre "6.5.0" :exclusions [org.clojure/clojure]]
                                        [org.clojure/clojure "1.11.1"]]}
 
-             :dev {:plugins [[cider/cider-nrepl "0.45.0"]
+             :dev {:plugins [[cider/cider-nrepl "0.50.2"]
                              [refactor-nrepl "3.9.0"]]}
 
              :1.9 {:dependencies [[org.clojure/clojure "1.9.0"]]}
@@ -36,7 +36,7 @@
 
              :test {:jvm-opts ["-Djava.util.logging.config.file=test/resources/logging.properties"]
                     :resource-paths ["test/resources"]
-                    :dependencies [[nubank/matcher-combinators "3.8.8"]
+                    :dependencies [[nubank/matcher-combinators "3.9.1"]
                                    [org.clojure/test.check "1.1.1" :exclusions [org.clojure/clojure]]]}
 
              :cljfmt {:plugins [[lein-cljfmt "0.9.2" :exclusions [org.clojure/clojure
